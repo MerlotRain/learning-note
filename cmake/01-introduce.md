@@ -136,3 +136,41 @@ configure_file(version.h.in version.h)
 
 通过源码我们可知，Qt根据平台，将相应的导出、导入定义已经做了封装，我们只需要对宏重命名即可，这两个例子中，`CORE_LIBRARY_BUILD`和`CORE_LIBRARY`都定义在工程中
 例如.vcxproj，.pro，CMakeLists.txt中
+
+#### 2.2 CMake主动生成
+
+从上面例子中我们可以看出，导出头的内容和编译平台有关。
+
+所以CMake提供了一种通用的处理方式，它定义在`GenerateExportHeader`中。
+
+使用方式如下：
+
+```CMakeLists
+# 工程中的做法是，在最外层的CMakeLists.txt中添加模块
+
+include(GenerateExportHeader)
+
+# 在子模块中，例如 corelib 模块中，主动生成，以下是 corelib 中的内容
+
+add_library(core SHARED)
+
+generate_export_header( 
+    core
+    BASE_NAME core
+    EXPORT_FILE_NAME core_global.h
+)
+
+target_include_directories(core PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+```
+
+在C++中就可以如下使用
+```C++
+
+#include <core_global.h>
+
+class CORE_EXPORT Foo {};
+```
+
