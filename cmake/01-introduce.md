@@ -62,11 +62,11 @@ configure_file(version.h.in version.h)
 
 在上述的方案中，仍然存在一些不灵活的地方，当我们更新了一个版本后，就要手动修改CMakeLists文件，虽然代价很大，但仍然有其他解决方案来避免手动修改CMakeLists
 
-我们可以添加一个名为`version.txt`的文本文件，将版本信息，软件名称，版权信息等都卸载文本中，在CMakeLists中，通过读文件的方式获取所需的值，如此，我们每次都只需要修改文本文件即可。
+我们可以添加一个名为`VERSION.txt`的文本文件，将版本信息，软件名称，版权信息等都卸载文本中，在CMakeLists中，通过读文件的方式获取所需的值，如此，我们每次都只需要修改文本文件即可。
 
 
 ```txt
-# version.txt
+# VERSION.txt
 # CORE versions
 CORE_VERSION_MAJOR=1
 CORE_VERSION_MINOR=0
