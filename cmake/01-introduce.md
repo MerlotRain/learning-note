@@ -92,3 +92,47 @@ unset(_version_patch)
 configure_file(version.h.in version.h)
 
 ```
+
+### 2. C++函数导出定义
+
+在C++开发中，API函数都需要提供导出头，在Windows平台下，我们需要定义 `__declspec(dllexport)`，对于API的调用方，则会使用 `__declspec(dllimport)`
+
+在UNIX平台下，导出和导入都定义为`__attribute__((visibility("default")))`，通常我们有以下几种处理方式
+
+#### 2.1 主动定义
+```C++
+
+#pragma once
+
+#ifdef _WIN32
+    #ifdef CORE_LIBRARY_BUILD
+        #define CORE_API __declspec(dllexport)
+    #else
+        #define CORE_API __declspec(dllimport)
+    #endif
+#else
+#define CORE_API __attribute__((visibility("default")))
+#endif
+
+```
+
+这是一种简单的定义，主要区分了Windows平台和非Windows平台，在Qt中，也有另外一种常见的写法
+```C++
+// core_global.h
+
+#ifndef CORE_GLOBAL_H
+#define CORE_GLOBAL_H
+
+#include <QtCore/QtGlobal>
+
+#ifdef CORE_LIBRARY
+#define CORE_API Q_DECL_EXPORT
+#else
+#define CORE_API Q_DECL_IMPORT
+#endif
+
+#endif //CORE_GLOBAL_H
+```
+
+通过源码我们可知，Qt根据平台，将相应的导出、导入定义已经做了封装，我们只需要对宏重命名即可，这两个例子中，`CORE_LIBRARY_BUILD`和`CORE_LIBRARY`都定义在工程中
+例如.vcxproj，.pro，CMakeLists.txt中
