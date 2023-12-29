@@ -57,3 +57,38 @@ configure_file(version.h.in version.h)
 在经过CMake configure之后，就会在`${PROJECT_BINARY_DIR}`下生成`version.h`文件
 
 经过了上面的操作，我们成功实现了CMake动态生成程序版本号，同时该版本号也可以在CMake configure时，作为configure条件使用，整合了两种需求。
+
+#### 1.4 方案扩展
+
+在上述的方案中，仍然存在一些不灵活的地方，当我们更新了一个版本后，就要手动修改CMakeLists文件，虽然代价很大，但仍然有其他解决方案来避免手动修改CMakeLists
+
+我们可以添加一个名为`version.txt`的文本文件，将版本信息，软件名称，版权信息等都卸载文本中，在CMakeLists中，通过读文件的方式获取所需的值，如此，我们每次都只需要修改文本文件即可。
+
+
+```txt
+# version.txt
+# CORE versions
+CORE_VERSION_MAJOR=1
+CORE_VERSION_MINOR=0
+CORE_VERSION_PATCH=1
+```
+
+```CMake
+
+file(READ VERSION.txt _version_)
+string(REGEX MATCH "CORE_VERSION_MAJOR=([0-9]+)" _ ${_version_})
+set(_version_major ${CMAKE_MATCH_1})
+string(REGEX MATCH "CORE_VERSION_MINOR=([0-9]+)" _ ${_version_})
+set(_version_minor ${CMAKE_MATCH_1})
+string(REGEX MATCH "CORE_VERSION_PATCH=([0-9]+)" _ ${_version_})
+set(_version_patch ${CMAKE_MATCH_1})
+
+project(test VERSION "${_version_major}.${_version_minor}.${_version_patch}")
+unset(_version_)
+unset(_version_major)
+unset(_version_minor)
+unset(_version_patch)
+
+configure_file(version.h.in version.h)
+
+```
