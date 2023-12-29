@@ -31,3 +31,29 @@
 
 这种一种最为简单的处理方式，与以上最大的区别在于，我们在代码中可以通过`#include <version.h>`的方式读取定义的版本宏，并作出相应的操作，例如依据版本判断执行的代码块
 但它同样存在一个问题，定义在`version.h`中的宏，无法在CMake中用做条件判断。例如我们在Qt开发中会判断Qt的大版本是5还是6，于是就有了第三种解决方案。
+
+#### 1.3 CMake configure_file
+
+首先我们需要在代码中定义一个`version.h.in`的模板文件
+```C++
+#ifndef VERSION_H
+#define VERSION_H
+
+#define CORE_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define CORE_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define CORE_VERSION_PATCH @PROJECT_VERSION_PATCH@
+
+#define CORE_VERSION_STRING "@PROJECT_VERSION@"
+
+#endif //VERSION_H
+```
+
+在`CMakeLists.txt`，通常是最外层，添加如下内容
+```CMake
+project(test VERSION 1.0.1)
+configure_file(version.h.in version.h)
+```
+
+在经过CMake configure之后，就会在`${PROJECT_BINARY_DIR}`下生成`version.h`文件
+
+经过了上面的操作，我们成功实现了CMake动态生成程序版本号，同时该版本号也可以在CMake configure时，作为configure条件使用，整合了两种需求。
