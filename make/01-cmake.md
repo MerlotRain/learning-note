@@ -1,8 +1,28 @@
 # CMake 使用中的注意事项
 
-## CMake的安装
+## 一、CMake的安装
 
-## CMake使用中的技巧
+在 Windows 环境下，建议直接使用官方提供的安装包，安装结束后可以配置环境，不配置环境变量也没有太多问题，因为大部分的编译都在 CMake GUI 中完成
+
+在Mac和Linux中，建议下载源码编译，而不是通过包管理工具。
+
+* Linux下的rpm和apt下载后都可以直接安装在usr/local/bin下，而Mac的homebrew，目前arm64架构，会把包安装在opt/homebrew/bin下，需要额外配置环境才可以使用，当然，homebrew的环境配置，我会在后续的章节中讲解，这对从事C/C++的程序员来说非常关键
+
+* 对于简单的CMake程序编译，我们可以用一下命令
+
+```
+mkdir build && cd build
+cmake ..
+make
+```
+
+* 对于一些复杂的工程，例如QGIS，cmake需要引入很多配置变量，所以直接敲命令会很麻烦，而且命令没法持久话，故我们需要在CMake GUI 或者 VSCode中编译
+
+以VSCode为例，引入工程后，我们需要在当前目录下的`.vscode`文件夹中创建`settings.json`，当然你需要提前安装CMakeTools的插件
+
+
+
+## 二、CMake使用中的技巧
 
 我们默认查看该文档的人，已经掌握了cmake的基本命令，例如`cmake_minimum_required(VERSION 3.20)`，`add_executable(test main.cpp)`等，下面要介绍的主要是一些工程上的命令
 
