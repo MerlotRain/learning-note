@@ -1,25 +1,5 @@
 # learning-note
 
-├── Android
-├── Apple
-├── HarmonyOS
-├── Java
-├── Mini Program
-├── Node
-├── Python
-├── Qt
-├── Rust
-├── Script
-├── c
-├── cxx
-├── dotnet
-├── make
-└── open-sources
-    ├── gdal
-    ├── opencv
-    ├── opengl
-    └── pcl
-
 该仓库主要用于整理各种学习资料，包含各类语言的用法和工程编译的注意事项，其中也将包含VSCode的使用
 
 文章中所有环境都运行在MacOS M2 arm64环境
