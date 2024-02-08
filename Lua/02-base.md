@@ -3,7 +3,7 @@
 ## 注释
 ```lua
 
--- // signle-line comment
+-- // single-line comment
 
 --[[
     // multi-line comment
