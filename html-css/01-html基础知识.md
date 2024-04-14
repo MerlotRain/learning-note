@@ -13,3 +13,18 @@
 ```html
 <input type="text" />
 ```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <!-- 用于指定语言 -->
+  <head>
+    <title>hello</title>
+    <meta charset="utf-8" />
+    <!-- 用于指定字符集 -->
+  </head>
+  <body>
+    <h1>hello</h1>
+  </body>
+</html>
+```
