@@ -69,7 +69,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "gdb",
+            "miDebuggerPath": "gdb", #已经配置过滤经，所以这里我们使用gdb调试
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -104,6 +104,8 @@ int main()
 ```
 
 ```cmake
+
+# CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.18)
 
