@@ -1,3 +1,23 @@
+# MinGW
+
+MinGW，全称Minimalist GNU for Windows，是一个开源的软件开发环境，旨在为Windows操作系统提供GNU工具集的使用环境。它是GCC编译器和GNU Binutils在Win32平台下的移植产物，包括一系列头文件（Win32API）、库和可执行文件，允许程序员在Windows平台上使用GCC和其他GNU工具集来编写和编译C、C++等语言的程序。
+
+## MinGW的主要功能包括：
+
+* 提供GNU编译器集合（GCC）：包含C、C++、Objective-C等语言的编译器，能够将源代码编译成可在Windows上直接运行的二进制文件，而不需要依赖第三方C运行时库。
+
+* 简化开发环境：MinGW提供了一个轻量级的开发环境，让程序员在Windows上体验到类似Linux的开发环境，减少了对Windows特有开发工具链的依赖。
+
+* 原生Windows应用程序支持：MinGW的主要目标是让程序员能够在Windows操作系统上编译出原生的Windows应用程序，直接调用Win32 API，而非Linux API。
+
+* 跨平台兼容性：通过MinGW编译的程序不仅可以在Windows上运行，还可以通过简单的修改在Linux或其他操作系统上运行，从而实现跨平台兼容性。
+
+* MinGW还具有高度的可定制性，用户可以根据自己的需要选择安装特定的编译器和工具集。同时，由于其开源的特性，MinGW也吸引了大量的开发者为其贡献代码和修复bug，使其不断完善和发展。
+
+## 为什么一定是MinGW
+
+对我来说一个简单原因在于，MinGW的CMake编译结果，没有debug和release的套壳文件夹，这是非常nice的一点
+
 # mingw-64环境搭建
 
 在Windows下，我们为了使用gcc,g++等编译工具，使用mingw是必然的选择。
@@ -69,7 +89,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "gdb", #已经配置过滤经，所以这里我们使用gdb调试
+            "miDebuggerPath": "gdb", #已经配置过路径，所以这里我们使用gdb调试
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -93,7 +113,7 @@
 // main.cpp
 
 #include <iostream> // 这里的路径就正常找到mingw下的c++/include
-#include <windows.h> // 不需要去安装Windows SDK，这种文件是必然存在的，但是调用Windows API是否有影响，后续测试
+#include <windows.h> // 不需要去安装Windows SDK，这些头文件都有MinGW提供，可以正常使用，包括类似shellapi.h等头文件
 
 int main()
 {
