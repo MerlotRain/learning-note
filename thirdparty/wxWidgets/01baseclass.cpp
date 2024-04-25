@@ -1,3 +1,16 @@
+/**
+ * 目前通过homebrew在MacOS下安装的库，找不到CMake文件，目前还没有解决的方案
+ * 
+ * 同时，由于/opt/homebrew/include 下wx相关头文件存在版本后缀，暂时也不确定怎么去区分版本
+ * 
+ * 看后续官方处理，目前先主要讲解Windows环境下的状态
+ * 
+ * 同时，后续也会编译Linux下的库，预计在Linux下应该正常
+ * 
+ * 上述问题推测是arm64环境下，gcc编译时没有生成cmake包引发
+*/
+
+
 #include <wx/wx.h>
 #include <wx/file.h>
 
