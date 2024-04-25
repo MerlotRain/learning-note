@@ -67,7 +67,17 @@ MinGW，全称Minimalist GNU for Windows，是一个开源的软件开发环境�
 
 * 安装VSCode作为编辑器
 
-## VS Code下的几个重要文件
+## VS Code编码
+
+### CMake配置
+
+如果你之前是用MSVC，现在换MinGW，那么命令`CMake: Select a Kit`还会缓存之前的套件
+
+使用命令`CMake: Edit User-Local CMake Kits`调出json，删除之前的配置就可以
+
+这个问题同样出现在其他平台，如果GCC版本更新，例如`MacOSX`，那么老的GCC配置无法被清理掉
+
+### 一个简单工程+调试
 
 ```json
 # launch.json
@@ -132,3 +142,4 @@ cmake_minimum_required(VERSION 3.18)
 add_executable(code main.cpp)
 
 ```
+
