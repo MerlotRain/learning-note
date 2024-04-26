@@ -1,9 +1,12 @@
-# QFlags
+# Normal-Class
+
+本文介绍QtCore模块中，需要去使用的类，这些类偏帮助性，虽然可以使用C++实现，但最好还是使用Qt提供的类来实现，从编码层面做到统一
+
+## QFlags
 
 这是Qt提供的用于做枚举异或操作的核心类，非常好用
 
 ```c++
-
 enum DisplayPartten {
     Crown = 0x01,
     Trunk = 0x02,
@@ -28,3 +31,5 @@ inline QFlags &setFlag(Enum flag, bool on = true) noexcept;
 ```
 
 需要注意的是，枚举的最大值要小于`sizeof(int)`,也就是说枚举最多只能存在32个，否则会报`static_cast`错误。
+
+## QVariant

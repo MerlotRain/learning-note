@@ -124,6 +124,3 @@ static void qt_message_print(QtMsgType, const QMessageLogContext&, const QString
 %{time boot}	消息的时间，启动进程的秒数
 %{time [format]}	消息产生时,系统时间被格式化通过把格式传递至QDateTime::toString()。如果没有指定的格式，使用Qt::ISODate。
 %{backtrace [depth=N] [separator=“…”]}	很多平台不支持，暂略…
-
-
-
