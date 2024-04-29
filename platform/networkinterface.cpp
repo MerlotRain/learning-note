@@ -15,79 +15,75 @@
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
 
-void network()
+static char toHexUpper(unsigned int value) { return "0123456789ABCDEF"[value & 0xF]; }
+
+static std::string makeHwAddress(int len, unsigned char *data)
 {
-    IP_ADAPTER_ADDRESSES staticBuf[2];
-    PIP_ADAPTER_ADDRESSES pAdapter = staticBuf;
-    ULONG bufSize = sizeof(staticBuf);
+  const int outLen = std::max(len * 2 + (len - 1) * 1, 0);
+  std::string result;
+  for (int i = 0; i < len; ++i)
+  {
+    if (i)
+      result.push_back(':');
+    result.push_back(toHexUpper(data[i] / 16));
+    result.push_back(toHexUpper(data[i] % 16));
+  }
+  return result;
+}
 
-    ULONG flags = GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_DNS_SERVER | GAA_FLAG_SKIP_MULTICAST;
-    ULONG retval = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAdapter, &bufSize);
-    if (retval == ERROR_BUFFER_OVERFLOW)
+static std::string queryMacAddress()
+{
+    std::string macAddress;
+
+  IP_ADAPTER_ADDRESSES staticBuf[2];
+  PIP_ADAPTER_ADDRESSES pAdapter = staticBuf;
+  ULONG bufSize = sizeof(staticBuf);
+
+  ULONG flags = GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_DNS_SERVER | GAA_FLAG_SKIP_MULTICAST;
+  ULONG retval = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAdapter, &bufSize);
+  if (retval == ERROR_BUFFER_OVERFLOW)
+  {
+    pAdapter = reinterpret_cast<IP_ADAPTER_ADDRESSES *>(malloc(bufSize));
+    if (!pAdapter)
+      return "0";
+
+    if (GetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAdapter, &bufSize) != ERROR_SUCCESS)
     {
-        pAdapter = reinterpret_cast<IP_ADAPTER_ADDRESSES *>(malloc(bufSize));
-        if (pAdapter)
-            return;
-
-        if (GetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAdapter, &bufSize) != ERROR_SUCCESS)
-        {
-            free(pAdapter);
-            return;
-        }
+      free(pAdapter);
+      return "0";
     }
-    else if (retval != ERROR_SUCCESS)
+  }
+  else if (retval != ERROR_SUCCESS)
+  {
+    return "0";
+  }
+
+  for (PIP_ADAPTER_ADDRESSES ptr = pAdapter; ptr; ptr = ptr->Next)
+  {
+    assert(ptr->Length >= offsetof(IP_ADAPTER_ADDRESSES, Luid));
+    assert(ptr->Length >= offsetof(IP_ADAPTER_ADDRESSES, Ipv6IfIndex));
+
+    // ip
+    if (ptr->Ipv6IfIndex != 0)
+      std::cout << "Ipv6IfIndex index " << ptr->Ipv6IfIndex << std::endl;
+    else if (ptr->IfIndex != 0)
+      std::cout << "IfIndex index " << ptr->IfIndex << std::endl;
+
+    int mtu = std::min<int64_t>(ptr->Mtu, INT_MAX);
+    std::cout << "mtu is " << mtu << std::endl;
+
+    if (ptr->OperStatus == IfOperStatusUp)
     {
-        return;
+      if (ptr->PhysicalAddressLength)
+        macAddress = makeHwAddress(ptr->PhysicalAddressLength, ptr->PhysicalAddress);
+
+      break;
     }
+  }
+  return macAddress.empty() ? "0" : macAddress;
+}
 
-    for (PIP_ADAPTER_ADDRESSES ptr = pAdapter; ptr; ptr = ptr->Next)
-    {
-        assert(ptr->Length >= offsetof(IP_ADAPTER_ADDRESSES, Luid));
-        assert(ptr->Length >= offsetof(IP_ADAPTER_ADDRESSES, Ipv6IfIndex));
-
-        // ip
-        if (ptr->Ipv6IfIndex != 0)
-            std::cout << "Ipv6IfIndex index " << ptr->Ipv6IfIndex << std::endl;
-        else if (ptr->IfIndex != 0)
-            std::cout << "IfIndex index " << ptr->IfIndex << std::endl;
-
-        int mtu = std::min<int64_t>(ptr->Mtu, INT_MAX);
-        std::cout << "mtu is " << mtu << std::endl;
-
-        if (ptr->OperStatus == IfOperStatusUp)
-        {
-            std::cout << "ip is up and running" << std::endl;
-        }
-        if ((ptr->Flags & IP_ADAPTER_NO_MULTICAST) == 0)
-        {
-            std::cout << "can multi cast" << std::endl;
-        }
-        if (ptr->IfType == IF_TYPE_PPP)
-        {
-            std::cout << "is point to point" << std::endl;
-        }
-
-        switch (ptr->IfType)
-        {
-        case IF_TYPE_ETHERNET_CSMACD:
-            std::cout << "IEEE 802.3 Ethernet interfaces, though on many systems other types of IEEE 802 interfaces may also be detected as Ethernet (especially Wi-Fi)." << std::endl;
-            break;
-        case IF_TYPE_FDDI:
-            std::cout << "ANSI X3T12 Fiber Distributed Data Interface, a local area network over optical fibers." << std::endl;
-            break;
-        case IF_TYPE_PPP:
-            break;
-        case IF_TYPE_SLIP:
-            break;
-        case IF_TYPE_SOFTWARE_LOOPBACK:
-            break;
-        case IF_TYPE_IEEE80211:
-            break;
-        case IF_TYPE_IEEE1394:
-            break;
-        };
-    }
-
+  
 #else
 
 #endif //
