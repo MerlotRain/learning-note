@@ -10,3 +10,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 .DS_Store
+
+zig-cache
+zig-out
