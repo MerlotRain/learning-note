@@ -8,16 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "Calc.h"
 
-/*
- @brief 基本数据类型
- Objective-C的数据类型和C保持一致，同时做了扩展，但是基本数据类型还是一样的
- 
- 同时扩展了BOOL类型，作为YES,NO的模型
- 
- 
- 
- */
-
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
@@ -27,6 +17,9 @@ int main(int argc, const char * argv[]) {
         Calc* cl = [[Calc alloc] init];
         double res = [cl sum:1.0 other:1.2];
         NSLog(@"sum %f", res);
+        UniChar a = 12;
+        NSString* str = @"Hello World";
+        NSArray* ar = @[@"1", @"2"];
     }
     return 0;
 }
