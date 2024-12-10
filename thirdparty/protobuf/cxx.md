@@ -6,21 +6,27 @@ Protocol Buffers（简称 Protobuf）是由 Google 开发的一种语言中立�
 
 ## Protobuf 的主要特性
 
-	1.	高效性：
-	•	紧凑的二进制格式，比 JSON 和 XML 更节省带宽和存储空间。
-	•	解析速度快，适用于需要高性能的场景。
-	2.	跨语言、跨平台支持：
-	•	支持多种语言：C++, Java, Python, Go, C#, JavaScript 等。
-	•	可在不同系统间（如 Windows、Linux）使用。
-	3.	版本兼容性：
-	•	添加字段时向后兼容，字段的移除或修改也有规则保障兼容性。
+1. 高效性：
+
+   • 紧凑的二进制格式，比 JSON 和 XML 更节省带宽和存储空间。
+   
+   • 解析速度快，适用于需要高性能的场景。
+2. 跨语言、跨平台支持：
+
+   • 支持多种语言：C++, Java, Python, Go, C#, JavaScript 等。
+
+   • 可在不同系统间（如 Windows、Linux）使用。
+
+3. 版本兼容性：
+
+   • 添加字段时向后兼容，字段的移除或修改也有规则保障兼容性。
 
 ## 基本使用流程
 
-1. 定义 .proto 文件
+### 1. 定义 .proto 文件
 
-使用 .proto 文件描述数据结构。例如：
-
+使用`.proto`文件描述数据结构。例如：
+```proto
 syntax = "proto3";
 
 message Person {
@@ -28,30 +34,59 @@ message Person {
   string name = 2;        // 姓名
   string email = 3;       // 邮箱
 }
+```
 
-	•	syntax = "proto3"：指定使用 Protobuf 的版本 3。
-	•	message：定义一个数据结构。
-	•	字段规则：
-	•	每个字段都有唯一的编号，用于序列化和反序列化（如 id = 1）。
-	•	字段类型支持基本类型（int32, string 等）和嵌套类型。
+• syntax = "proto3"：指定使用 Protobuf 的版本 3。
 
-2. 编译 .proto 文件
+• message：定义一个数据结构。
+
+• 字段规则：
+
+	• 每个字段都有唯一的编号，用于序列化和反序列化（如 id = 1）。
+
+	• 字段类型支持基本类型（int32, string 等）和嵌套类型。
+
+### 2. 编译 .proto 文件
 
 使用 protoc 编译器生成目标语言代码：
 
 protoc --proto_path=src --cpp_out=out src/person.proto
 
 支持的目标语言包括：
-	•	--cpp_out：生成 C++ 代码。
-	•	--java_out：生成 Java 代码。
-	•	--python_out：生成 Python 代码。
 
-3. 使用生成的代码
+• --cpp_out：生成 C++ 代码。
+
+• --java_out：生成 Java 代码。
+
+• --python_out：生成 Python 代码。
+
+### 3. 使用生成的代码
+#### 创建CMakeLists.txt
+```cmake
+
+cmake_minimum_required(VERSION 3.14)
+project(test_protobuf)
+
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PROTOBUF REQUIRED protobuf)
+#find_package(protobuf REQUIRED CONFIG)
+
+add_executable(main main.cpp message.pb.cc message.pb.h)
+target_link_libraries(main PRIVATE ${PROTOBUF_LIBRARIES} )
+target_include_directories(main PUBLIC ${PROTOBUF_INCLUDE_DIRS})
+
+message("Protobuf_VERSION=${PROTOBUF_VERSION}")
+message("Protobuf_LIBRARIES=${PROTOBUF_LIBRARIES}")
+message("Protobuf_INCLUDE_DIRS=${PROTOBUF_INCLUDE_DIRS}")
+
+```
 
 以 C++ 为例，假设生成了 person.pb.h 和 person.pb.cc：
 
-序列化数据
-
+#### 序列化数据
+```C++
 #include "person.pb.h"
 #include <fstream>
 
@@ -69,9 +104,11 @@ int main() {
 
     return 0;
 }
+```
 
-反序列化数据
+#### 反序列化数据
 
+```C++
 #include "person.pb.h"
 #include <fstream>
 #include <iostream>
@@ -90,8 +127,9 @@ int main() {
 
     return 0;
 }
+```
 
-高级功能
+#### 高级功能
 
 	1.	嵌套消息：
 支持嵌套定义消息。
