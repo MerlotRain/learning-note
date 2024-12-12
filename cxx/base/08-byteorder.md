@@ -11,7 +11,7 @@ constexpr bool is_big_endian = !byte_order::is_litten_endian;
 
 ```
 
-使用C++17之后的`constexpr`风格判断，所有判断全部在编译器完成，使用非常简洁高效
+使用C++17之后的`constexpr`风格判断，所有判断全部在编译期完成，而且非常简洁高效
 
 ```C++
 
