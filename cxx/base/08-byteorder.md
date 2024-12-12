@@ -6,8 +6,8 @@ struct byte_order
 	static constexpr auto is_litten_endian = (value & 0xFF) == 0x02;
 };
 
-constexpr bool is_litten_endian = ByteOrder::is_litten_endian;
-constexpr bool is_big_endian = !ByteOrder::is_litten_endian;
+constexpr bool is_litten_endian = byte_order::is_litten_endian;
+constexpr bool is_big_endian = !byte_order::is_litten_endian;
 
 ```
 
