@@ -44,9 +44,25 @@ void point_code() {
 }
 
 void segment_code() {
-    Point_2 p1(0, 0);
-    Point_2 p2(1, 1);
-    Segment_2 seg(p1, p2);
+  Point_2 p1(0, 0);
+  Point_2 p2(4, 4);
+  Point_2 p3(0, 4);
+  Point_2 p4(4, 0);
+  Segment_2 seg1(p1, p2);
+  Segment_2 seg2(p3, p4);
+
+  if (CGAL::do_intersect(seg1, seg2)) {
+    std::cout << "The segments intersect" << std::endl;
+    auto result = CGAL::intersection(seg1, seg2);
+    // now use std::get_if
+    if (const Segment_2 *s = std::get_if<Segment_2>(&*result)) {
+      std::cout << *s << std::endl;
+    } else {
+      const Point_2 *p = std::get_if<Point_2>(&*result);
+      std::cout << *p << std::endl;
+    }
+    return 0;
+  }
 }
 
 void polygon_code() {
