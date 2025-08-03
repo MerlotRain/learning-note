@@ -124,3 +124,65 @@ static void qt_message_print(QtMsgType, const QMessageLogContext&, const QString
 %{time boot}	消息的时间，启动进程的秒数
 %{time [format]}	消息产生时,系统时间被格式化通过把格式传递至QDateTime::toString()。如果没有指定的格式，使用Qt::ISODate。
 %{backtrace [depth=N] [separator=“…”]}	很多平台不支持，暂略…
+
+## Qt with Spdlog
+```c++
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+
+#include <QCoreApplication>
+#include <QDir>
+#include <QDebug>
+
+static void qtInstallMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    std::string logMsg = msg.toStdString();
+    switch (type) {
+    case QtDebugMsg:
+        spdlog::debug(logMsg);
+        break;
+    case QtInfoMsg:
+        spdlog::info(logMsg);
+        break;
+    case QtWarningMsg:
+        spdlog::warn(logMsg);
+        break;
+    case QtCriticalMsg:
+        spdlog::error(logMsg);
+        break;
+    case QtFatalMsg:
+        spdlog::critical(logMsg);
+        abort();
+    }
+};
+
+static void initLogging()
+{
+    try {
+        QString logDir = QDir(QCoreApplication::applicationDirPath()).filePath("logs");
+        QDir().mkpath(logDir);
+        auto logFile = QDir(logDir).filePath("app.log");
+        auto logger = spdlog::rotating_logger_mt("app_logger", logFile.toStdString(), 1048576 * 5, 50);
+        logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+        spdlog::set_default_logger(logger);
+        spdlog::set_level(spdlog::level::debug);
+        spdlog::flush_on(spdlog::level::info);
+    } catch (const spdlog::spdlog_ex &ex) {
+        fprintf(stderr, "Log initialization failed: %s\n", ex.what());
+    }
+    qInstallMessageHandler(qtInstallMessageHandler);
+}
+
+int main(int argc, char **argv)
+{
+    QCoreApplication app(argc, argv);
+
+    initLogging();
+    qDebug() << "This is a Qt debug message";
+    qInfo() << "This is a Qt info message";
+    qWarning() << "This is a Qt warning";
+    qCritical() << "This is a Qt critical error";
+
+    return app.exec();
+}
+```
