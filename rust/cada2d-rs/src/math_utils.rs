@@ -1,0 +1,1 @@
+pub const TOLERANCE: f64 = 1.0e-9;
