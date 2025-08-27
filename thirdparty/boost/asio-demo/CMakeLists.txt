@@ -11,26 +11,14 @@ add_executable(asio-demo
     router.h
     server.h
     session.h
+    
     main.cpp
     router.cpp
     server.cpp
     session.cpp
 
-
-    handlers/time_handler.h
-    handlers/root_handler.h
-    handlers/time_handler.cpp
-    handlers/root_handler.cpp
-    handlers/start_version_handler.h
-    handlers/start_version_handler.cpp
-
-    handlers/job/start_mapping_task_handler.h
-    handlers/job/start_mapping_task_handler.cpp
-    handlers/job/check_task_handler.h
-    handlers/job/check_task_handler.cpp
-
-    handlers/job/multi_resful_handler.h
-    handlers/job/multi_resful_handler.cpp
+    version_handler.h
+    version_handler.cpp
 )
 
 target_include_directories(asio-demo PRIVATE ${Boost_INCLUDE_DIRS})

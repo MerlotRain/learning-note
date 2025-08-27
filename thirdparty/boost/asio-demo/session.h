@@ -1,16 +1,18 @@
+#pragma once
+
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/bind/bind.hpp>
 #include <memory>
+#include <router_export.h>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
 using tcp = boost::asio::ip::tcp;
 
-
-class Session : public std::enable_shared_from_this<Session>
+class ROUTER_EXPORT Session : public std::enable_shared_from_this<Session>
 {
 public:
     explicit Session(tcp::socket socket);
