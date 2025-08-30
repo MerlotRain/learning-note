@@ -1,5 +1,4 @@
 file(GLOB_RECURSE SOURCES "*.cpp")
-message("SOURCES=${SOURCES}")
 
 foreach(src ${SOURCES})
     get_filename_component(dir ${src} DIRECTORY)
