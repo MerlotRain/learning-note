@@ -13,3 +13,4 @@ _deps
 
 zig-cache
 zig-out
+.vscode
